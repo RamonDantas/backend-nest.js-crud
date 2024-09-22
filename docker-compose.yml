@@ -1,0 +1,27 @@
+version: '3'
+services:
+  nest-app:
+    build: .
+    container_name: nestjs-app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/nest
+    volumes:
+      - .:/usr/src/app
+    command: npm run start:dev
+    restart: always
+
+  mongo:
+    image: mongo:6.0
+    container_name: nestjs-mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongodb:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    restart: always
