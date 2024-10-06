@@ -18,16 +18,16 @@ export class User extends Document {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-// Hook pre-save para fazer o hash da senha
+// Pre-save hook to hash the password
 UserSchema.pre('save', async function (next: () => void) {
   const user = this as User;
 
-  // Só faça hash se a senha for nova ou modificada
+  // Only hash if the password is new or changed
   if (!user.isModified('password')) {
     return next();
   }
 
-  // Gera o salt e faz o hash da senha
+  // Generates the salt and hashes the password
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(user.password, salt);
   user.password = hash;
