@@ -12,18 +12,15 @@ export class CustomerService {
     private readonly customerModel: Model<CustomerDocument>,
   ) {}
 
-  // Criar um novo Customer
   async create(createCustomerDto: CreateCustomerDto): Promise<Customer> {
     const createdCustomer = new this.customerModel(createCustomerDto);
     return createdCustomer.save();
   }
 
-  // Buscar todos os Customers
   async findAll(): Promise<Customer[]> {
     return this.customerModel.find().exec();
   }
 
-  // Buscar um Customer por ID
   async findOne(id: string): Promise<Customer> {
     const customer = await this.customerModel.findById(id).exec();
     if (!customer) {
@@ -32,7 +29,14 @@ export class CustomerService {
     return customer;
   }
 
-  // Atualizar um Customer por ID
+  async findByPhone(phone: string): Promise<Customer> {
+    const user = await this.customerModel.findOne({ phone }).exec();
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    return user;
+  }
+
   async update(
     id: string,
     updateCustomerDto: UpdateCustomerDto,
@@ -46,7 +50,6 @@ export class CustomerService {
     return updatedCustomer;
   }
 
-  // Remover um Customer por ID
   async remove(id: string): Promise<Customer> {
     const deletedCustomer = await this.customerModel
       .findByIdAndDelete(id)

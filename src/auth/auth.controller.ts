@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { CustomerAuthGuard } from './guards/customer-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -23,6 +24,22 @@ export class AuthController {
     },
   })
   async login(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(CustomerAuthGuard)
+  @Post('login/customer')
+  @ApiOperation({ summary: 'This route Post to login' })
+  @ApiBody({
+    description: 'Data to login',
+    schema: {
+      example: {
+        username: '+351 987654321',
+        password: '123456',
+      },
+    },
+  })
+  async loginCustomer(@Request() req) {
     return this.authService.login(req.user);
   }
 

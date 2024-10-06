@@ -8,10 +8,13 @@ import { UserModule } from './../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CustomerStrategy } from './strategies/customer.strategy';
+import { CustomerModule } from 'src/customer/customer.module';
 
 @Module({
   imports: [
     UserModule,
+    CustomerModule,
     PassportModule,
     ConfigModule.forRoot({ isGlobal: true }),
     JwtModule.registerAsync({
@@ -23,7 +26,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    CustomerStrategy,
+    JwtStrategy,
+    GoogleStrategy,
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })
